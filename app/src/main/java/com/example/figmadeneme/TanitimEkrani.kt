@@ -1,5 +1,4 @@
 package com.example.figmadeneme
-
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge

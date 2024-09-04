@@ -99,22 +99,39 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.164" />
 
+
         <TextView
             android:id="@+id/textViewSystem"
             android:layout_width="98dp"
             android:layout_height="23dp"
             android:fontFamily="@font/sehgoe"
+            android:gravity="center"
             android:text="System"
             android:textColor="#F0F0F0"
-            android:gravity="center"
             android:textSize="20dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.079"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.585" />
+            app:layout_constraintVertical_bias="0.855" />
+
+        <TextView
+            android:id="@+id/textViewExit"
+            android:layout_width="98dp"
+            android:layout_height="23dp"
+            android:fontFamily="@font/sehgoe"
+            android:gravity="center"
+            android:text="Exit"
+            android:textColor="#F0F0F0"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.923"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.855" />
 
         <TextView
             android:id="@+id/textViewSensors"

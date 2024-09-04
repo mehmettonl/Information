@@ -6,6 +6,7 @@ import android.os.Build
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
+import android.content.pm.ApplicationInfo
 import android.os.Bundle
 import android.os.Environment
 import android.os.StatFs
@@ -16,6 +17,7 @@ import android.widget.TextView
 import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorManager
+import android.widget.Toast
 
 class BilgiEkrani : AppCompatActivity() {
     private lateinit var binding: ActivityBilgiEkraniBinding
@@ -24,7 +26,6 @@ class BilgiEkrani : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityBilgiEkraniBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
 
 
         // RAM Bilgileri
@@ -78,17 +79,18 @@ class BilgiEkrani : AppCompatActivity() {
         binding.textViewCpu1.text = "CPU Model: ${cpuModel.toUpperCase()}"
         binding.textViewCpu2.text = "Cores Number: $cpuCores"
 
+
         // Uygulama sayısını hesaplamak için PackageManager'ı kullanın
         val packageManager = packageManager
-        val packages = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
-        val appCount = packages.size
+        val applications = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
 
-        // Uygulama sayısını bir TextView içinde gösterin
-        binding.imageView7.setOnClickListener {
-            binding.textViewBat1.text = "Installed Apps: $appCount"
-            val intent = Intent(this@BilgiEkrani,Uygulamalar::class.java)
-            startActivity(intent)
+        // Google Play Store'dan yüklenen uygulamaları filtreleyin
+        val playStoreApps = applications.filter { appInfo ->
+            val installerPackageName = packageManager.getInstallerPackageName(appInfo.packageName)
+            installerPackageName == "com.android.vending" // Google Play Store'dan yüklenen uygulamalar
         }
+        val appCount = playStoreApps.size
+
 
         // Android versiyon bilgilerini al
         val versionName = Build.VERSION.RELEASE
@@ -98,7 +100,7 @@ class BilgiEkrani : AppCompatActivity() {
         binding.textViewAndroidVersion.text = "Android Version: $versionName"
         binding.textViewAndroidVersionName.text = "API Level : $versionCode"
         // SensorManager'ı al
-        val sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        val sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
 
         // Tüm sensörleri al
         val sensorList: List<Sensor> = sensorManager.getSensorList(Sensor.TYPE_ALL)
@@ -110,32 +112,68 @@ class BilgiEkrani : AppCompatActivity() {
             sensorInfo.append("Sensör: ${sensor.name} - Tür: ${sensor.type}\n")
         }*/
 
-        binding.nextButton.setOnClickListener({
-            val intent =Intent(this,UcuncuSayfa::class.java)
-            startActivity(intent)
-        })
+        //Uygulama sayısını bir TextView içinde gösterin
 
-        binding.textViewNext.setOnClickListener({
-            val intent =Intent(this,UcuncuSayfa::class.java)
-            startActivity(intent)
-        })
-        binding.imageView4.setOnClickListener({
-            val intent =Intent(this,UcuncuSayfa::class.java)
-            startActivity(intent)
-        })
-        binding.imageView6.setOnClickListener({
-            val intent =Intent(this,UcuncuSayfa::class.java)
-            startActivity(intent)
-        })
-        binding.textViewSensors.setOnClickListener({
-            val intent =Intent(this,UcuncuSayfa::class.java)
-            startActivity(intent)
-        })
+        fun isPlayStoreInstalled(context: Context): Boolean {
+            return try {
+                // Play Store package name
+                val playStorePackageName = "com.android.vending"
+
+                // Uygulamanın package manager'ını al
+                val packageManager = context.packageManager
+
+                // Play Store'un package bilgilerini almaya çalış
+                packageManager.getPackageInfo(playStorePackageName, 0)
+                true // Eğer başarılı olursa, Play Store yüklüdür
+            } catch (e: PackageManager.NameNotFoundException) {
+                false // Eğer package bulunamazsa, Play Store yüklü değildir
+            }
+        }
+        val isInstalled = isPlayStoreInstalled(this)
+
+        if (isInstalled) {
+            // Play Store yüklü
+            Toast.makeText(this, "Play Store yüklü.", Toast.LENGTH_SHORT).show()
+        } else {
+            // Play Store yüklü değil
+            Toast.makeText(this, "Play Store yüklü değil.", Toast.LENGTH_SHORT).show()
+        }
 
 
 
+                    binding.imageView7.setOnClickListener({
+                    val intent = Intent(this@BilgiEkrani, Uygulamalar::class.java)
+                    startActivity(intent)
+                    })
+                    binding.nextButton.setOnClickListener({
+                        val intent = Intent(this, UcuncuSayfa::class.java)
+                        startActivity(intent)
+                    })
+
+                    binding.textViewNext.setOnClickListener({
+                        val intent = Intent(this, UcuncuSayfa::class.java)
+                        startActivity(intent)
+                    })
+                    binding.imageView4.setOnClickListener({
+                        val intent = Intent(this, UcuncuSayfa::class.java)
+                        startActivity(intent)
+                    })
+                    binding.imageView6.setOnClickListener({
+                        val intent = Intent(this, UcuncuSayfa::class.java)
+                        startActivity(intent)
+                    })
+                    binding.textViewSensors.setOnClickListener({
+                        val intent = Intent(this, UcuncuSayfa::class.java)
+                        startActivity(intent)
+                    })
+
+                    binding.textViewExit.setOnClickListener({
+                        val intent = Intent(this, MainActivity::class.java)
+                        startActivity(intent)
+                    })
+
+                }
     }
- }
 
 
 

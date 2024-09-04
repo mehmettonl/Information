@@ -19,10 +19,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.932">
 
-
-
-
-
         <TextView
             android:id="@+id/textViewSignIn"
             android:layout_width="wrap_content"
@@ -83,17 +79,17 @@
 
         <CheckBox
             android:id="@+id/saveLoginCheckBox"
-            android:layout_width="72dp"
-            android:layout_height="60dp"
+            android:layout_width="126dp"
+            android:layout_height="39dp"
             android:layout_alignParentLeft="true"
             android:text="Beni Hatırla"
-            android:textColor="#FFF"
+            android:textColor="#4E4E4E"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.054"
+            app:layout_constraintHorizontal_bias="0.067"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.764" />
+            app:layout_constraintVertical_bias="0.713" />
 
         <ImageView
             android:id="@+id/imageView"

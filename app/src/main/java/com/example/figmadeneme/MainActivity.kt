@@ -1,45 +1,80 @@
 package com.example.figmadeneme
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import android.app.ActivityManager
-import com.example.figmadeneme.databinding.ActivityMainBinding // Import ettiğinizden emin olun
+import com.example.figmadeneme.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityMainBinding
+    private lateinit var sharedPreferences: SharedPreferences
 
-    lateinit var username: EditText
-    lateinit var password: EditText
-    lateinit var loginButton: Button
-
+    private val PREFS_NAME = "MyPrefs"
+    private val KEY_REMEMBER_ME = "remember_me"
+    private val KEY_USERNAME = "username"
+    private val KEY_PASSWORD = "password"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-         binding.textViewSignIn.setOnClickListener {
-            val intent = Intent(applicationContext, BilgiEkrani::class.java)
-            startActivity(intent)
-            binding.textViewSignIn.setOnClickListener(View.OnClickListener {
-                if (binding.usernameText.text.toString() == "yazilim" && binding.passwordText.text.toString() == "muhendisligi") {
-                    Toast.makeText(this, "Login Succesful", Toast.LENGTH_SHORT).show()
+        sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
-                    val intent = Intent(this@MainActivity, BilgiEkrani::class.java)
-                    startActivity(intent)
+        // Daha önce hatırlanan kullanıcı adı ve şifre varsa, bu bilgileri doldur
+        val rememberedUsername = sharedPreferences.getString(KEY_USERNAME, null)
+        val rememberedPassword = sharedPreferences.getString(KEY_PASSWORD, null)
+        val rememberMe = sharedPreferences.getBoolean(KEY_REMEMBER_ME, false)
 
+        if (rememberMe) {
+            binding.usernameText.setText(rememberedUsername)
+            binding.passwordText.setText(rememberedPassword)
+            binding.saveLoginCheckBox.isChecked = true
+        } else {
+            binding.saveLoginCheckBox.isChecked = false
+        }
+
+        binding.textViewSignIn.setOnClickListener {
+            val username = binding.usernameText.text.toString()
+            val password = binding.passwordText.text.toString()
+            val rememberMe = binding.saveLoginCheckBox.isChecked
+
+            if (authenticate(username, password)) {
+                val editor = sharedPreferences.edit()
+                if (rememberMe) {
+                    editor.putString(KEY_USERNAME, username)
+                    editor.putString(KEY_PASSWORD, password)
+                    editor.putBoolean(KEY_REMEMBER_ME, true)
                 } else {
-                    Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show()
+                    editor.remove(KEY_USERNAME)
+                    editor.remove(KEY_PASSWORD)
+                    editor.putBoolean(KEY_REMEMBER_ME, false)
                 }
-            })
+                editor.apply()
+
+                Toast.makeText(this, "Giriş Başarılı", Toast.LENGTH_SHORT).show()
+                navigateToBilgiEkrani()
+            } else {
+                Toast.makeText(this, "Giriş Başarısız", Toast.LENGTH_SHORT).show()
+            }
         }
     }
+
+    private fun authenticate(username: String, password: String): Boolean {
+        // Gerçek kimlik doğrulama işlemini burada yapmalısınız
+        return username == "yazilim" && password == "muhendisligi"
+    }
+
+    private fun navigateToBilgiEkrani() {
+        val intent = Intent(this, BilgiEkrani::class.java)
+        startActivity(intent)
+        finish() // Giriş ekranını kapatabiliriz
+    }
 }
-
-
-
